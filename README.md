@@ -45,12 +45,28 @@ npm test
 
 26 项测试，全部通过。测试在 `vm` 沙箱中加载 `client.js`（stub 掉 `window.__ModuleLoader__`、`document` 与 `react`），覆盖：槽位注册契约、locale 词典完整性、样式注入与回收、按键映射与全部守卫条件、作答状态机（重复按键 / 不可作答 / 失败回滚）、以及卸载时监听器清理。
 
+## 上架 dshmarket（插件商店）
+
+dshmarket 的插件列表来自精选目录 [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)，条目不写在本仓库里，而在那边「一个插件一个 YAML 文件」。本仓库保留了一份待提交的条目副本：[market/dshmarket-entry.yml](market/dshmarket-entry.yml)。
+
+收录条件（对照本仓库现状）：
+
+| 条件 | 现状 |
+| --- | --- |
+| `package.json` 声明 `dsh.bundle`（只有 `dsh.client` 不算） | ✅ `dsh.bundle.patch` |
+| 仓库有真实可用的代码 | ✅ 26 项测试 |
+| 仓库创建满 1 天 | ✅ 首个提交 2026-10-08 |
+| 仓库添加 `dsh-plugin` topic | ⬜ 需在 GitHub 仓库页设置 |
+
+提交方式：把 `market/dshmarket-entry.yml` 复制到 `awesome-dsh-plugin` 仓库的 `data/plugins/wukiQAQ__dsh-enter-using.yml`，提 PR。文件名必须与 `url` 对应（`owner__repo.yml`），README 由 CI 生成、不要手改。条目字段已在本地用该仓库的 `scripts/lib/entries.mjs` 校验：4461 条全量 0 问题。
+
 ## 目录
 
 ```
-package.json          # dsh.bundle.patch + dsh.client（platform: web, immediately）
-cordis.patch.yml      # bundle 注入声明
-index.js              # Host 半边（无行为，UI 全在 Client）
-client.js             # Client 半边：审批面板 + 键盘交互
-test/client.test.mjs  # 测试
+package.json                  # dsh.bundle.patch + dsh.client（platform: web, immediately）
+cordis.patch.yml              # bundle 注入声明
+index.js                      # Host 半边（无行为，UI 全在 Client）
+client.js                     # Client 半边：审批面板 + 键盘交互
+test/client.test.mjs          # 测试
+market/dshmarket-entry.yml    # 待提交到 awesome-dsh-plugin 的商店条目
 ```

@@ -5,6 +5,18 @@
   "type": "module",
   "description": "DSH Web UI plugin: answer command-approval prompts with Enter and number keys, Codex style.",
   "license": "MIT",
+  "keywords": [
+    "dsh-plugin",
+    "dsh",
+    "approval",
+    "keyboard",
+    "codex"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wukiQAQ/dsh-enter-using.git"
+  },
+  "homepage": "https://github.com/wukiQAQ/dsh-enter-using#readme",
   "exports": {
     ".": "./index.js",
     "./client": "./client.js"
