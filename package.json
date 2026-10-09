@@ -1,0 +1,32 @@
+{
+  "name": "dsh-enter-using",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DSH Web UI plugin: answer command-approval prompts with Enter and number keys, Codex style.",
+  "license": "MIT",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "test": "node test/client.test.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  }
+}
