@@ -56,7 +56,9 @@ dshmarket 的插件列表来自精选目录 [awesome-dsh-plugin](https://github.
 | `package.json` 声明 `dsh.bundle`（只有 `dsh.client` 不算） | ✅ `dsh.bundle.patch` |
 | 仓库有真实可用的代码 | ✅ 26 项测试 |
 | 仓库创建满 1 天 | ✅ 首个提交 2026-10-08 |
-| 仓库添加 `dsh-plugin` topic | ⬜ 需在 GitHub 仓库页设置 |
+| 仓库添加 `dsh-plugin` topic | ✅ 已设置 |
+
+提交状态：条目已通过 PR 提交到上游 —— [awesome-dsh-plugin#6971](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/6971)（只含 `data/plugins/wukiQAQ__dsh-enter-using.yml` 一个文件）。合并后目录站点与 dshmarket 会自动收录。
 
 提交方式：把 `market/dshmarket-entry.yml` 复制到 `awesome-dsh-plugin` 仓库的 `data/plugins/wukiQAQ__dsh-enter-using.yml`，提 PR。文件名必须与 `url` 对应（`owner__repo.yml`），README 由 CI 生成、不要手改。条目字段已在本地用该仓库的 `scripts/lib/entries.mjs` 校验：4461 条全量 0 问题。
 
