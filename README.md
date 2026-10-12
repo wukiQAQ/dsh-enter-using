@@ -34,6 +34,7 @@ DSH Web 界面插件：**命令授权（审批）支持键盘回车 + 数字键*
 
 - **DSH 内**：`plugin_manager` → `install_bundle`，target 填本仓库目录（例如 `D:\dsh-project`）。
 - **命令行**：`dsh plugin add D:\dsh-project`。
+- **npm / 插件商店**：发布到 npm 后，商店会显示版本号与下载量，并可安装预构建包（免 `allowBuilds` 构建授权）。
 
 安装后按提示刷新页面或重启 `dsh web` 生效；命令授权面板出现时即可用数字键 / 回车 / Esc 作答。
 
@@ -62,6 +63,16 @@ dshmarket 的插件列表来自精选目录 [awesome-dsh-plugin](https://github.
 
 提交方式：把 `market/dshmarket-entry.yml` 复制到 `awesome-dsh-plugin` 仓库的 `data/plugins/wukiQAQ__dsh-enter-using.yml`，提 PR。文件名必须与 `url` 对应（`owner__repo.yml`），README 由 CI 生成、不要手改。条目字段已在本地用该仓库的 `scripts/lib/entries.mjs` 校验：4461 条全量 0 问题。
 
+## 发布到 npm（版本同步）
+
+商店卡片上的版本号取自 **npm 的 `dist-tags.latest`**（见 `dshmarket` 的 `src/registry.ts`：只有 GitHub 源码的条目 `version` 为 `null`，界面直接不显示版本号）。所以「随版本同步」＝把包装到 npm：之后每次 `npm version` + `npm publish`，商店会自动显示新版本，**不需要**再往目录提 PR。
+
+- 收录与 npm 无关：不发 npm 也能从 GitHub 安装，只是没有版本号与下载量（上游 `contributing.md` 原文）。
+- npm 映射由上游从 registry 自动采集：目录条目里不需要、也不允许手写 `npm:` 键。
+- 发布前提（本仓库已就绪）：`repository` 指回本仓库（上游靠它把 npm 包与目录条目关联起来）；官方 `@deepseek-ai/*` 用 `peerDependencies` 声明，且范围带**显式预发布分支**（否则 node-semver 会静默排除所有 `-rc.*` 版本，用户 `npm install` 时遇到 `ERESOLVE`）；`private` 已移除。
+- 手动发布：`npm login` → `npm publish`（`prepublishOnly` 会先跑 26 项测试）。
+- 自动发布：[.github/workflows/release.yml](.github/workflows/release.yml) 在推送 `v*` 标签时发布，需要在仓库 Secrets 里配置 `NPM_TOKEN`（npm automation token，Publish 权限）。发版流程：改 `version` → 提交 → `git tag v0.1.1 && git push origin v0.1.1`。
+
 ## 目录
 
 ```
@@ -71,4 +82,5 @@ index.js                      # Host 半边（无行为，UI 全在 Client）
 client.js                     # Client 半边：审批面板 + 键盘交互
 test/client.test.mjs          # 测试
 market/dshmarket-entry.yml    # 待提交到 awesome-dsh-plugin 的商店条目
+.github/workflows/release.yml # 打 v* 标签时自动 npm publish（需 NPM_TOKEN）
 ```
