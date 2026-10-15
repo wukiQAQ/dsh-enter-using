@@ -15,11 +15,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org
+      - name: Use npm 12 (staged publishing)
+        run: npm install -g npm@12
       - name: Test
         run: npm test
+      # 认证走 npm 的 Trusted Publishing（OIDC），无需 NPM_TOKEN。
+      # 需先在 npm 包设置页 → Publishing access → Trusted Publisher 登记：
+      # provider GitHub Actions、repo wukiQAQ/dsh-enter-using、workflow release.yml。
+      # 未登记时这一步会失败；可改为本地 `npx npm@12 stage publish`
+      # 再用 `npx npm@12 stage approve <stage-id>` 手工发版。
       - name: Publish to npm
-        run: npm publish --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public

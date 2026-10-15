@@ -59,7 +59,7 @@ dshmarket 的插件列表来自精选目录 [awesome-dsh-plugin](https://github.
 | 仓库创建满 1 天 | ✅ 首个提交 2026-10-08 |
 | 仓库添加 `dsh-plugin` topic | ✅ 已设置 |
 
-提交状态：条目已通过 PR 提交到上游 —— [awesome-dsh-plugin#6971](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/6971)（只含 `data/plugins/wukiQAQ__dsh-enter-using.yml` 一个文件）。合并后目录站点与 dshmarket 会自动收录。
+提交状态：条目已通过 PR 提交到上游 —— [awesome-dsh-plugin#6971](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/6971)（只含 `data/plugins/wukiQAQ__dsh-enter-using.yml` 一个文件，CI 两项检查均 success、`mergeable: clean`）。截至 2026-10-15 该 PR 仍为 **open**（上游按批次合并且积压较多），合并后目录站点与 dshmarket 才会自动收录、商店里才能搜到。
 
 提交方式：把 `market/dshmarket-entry.yml` 复制到 `awesome-dsh-plugin` 仓库的 `data/plugins/wukiQAQ__dsh-enter-using.yml`，提 PR。文件名必须与 `url` 对应（`owner__repo.yml`），README 由 CI 生成、不要手改。条目字段已在本地用该仓库的 `scripts/lib/entries.mjs` 校验：4461 条全量 0 问题。
 
@@ -70,8 +70,9 @@ dshmarket 的插件列表来自精选目录 [awesome-dsh-plugin](https://github.
 - 收录与 npm 无关：不发 npm 也能从 GitHub 安装，只是没有版本号与下载量（上游 `contributing.md` 原文）。
 - npm 映射由上游从 registry 自动采集：目录条目里不需要、也不允许手写 `npm:` 键。
 - 发布前提（本仓库已就绪）：`repository` 指回本仓库（上游靠它把 npm 包与目录条目关联起来）；官方 `@deepseek-ai/*` 用 `peerDependencies` 声明，且范围带**显式预发布分支**（否则 node-semver 会静默排除所有 `-rc.*` 版本，用户 `npm install` 时遇到 `ERESOLVE`）；`private` 已移除。
-- 手动发布：`npm login` → `npm publish`（`prepublishOnly` 会先跑 26 项测试）。
-- 自动发布：[.github/workflows/release.yml](.github/workflows/release.yml) 在推送 `v*` 标签时发布，需要在仓库 Secrets 里配置 `NPM_TOKEN`（npm automation token，Publish 权限）。发版流程：改 `version` → 提交 → `git tag v0.1.1 && git push origin v0.1.1`。
+- 发布状态：`0.1.0` 已于 2026-10-15 上线（tarball：`https://registry.npmjs.org/dsh-enter-using/-/dsh-enter-using-0.1.0.tgz`，`dist-tags.latest = 0.1.0`）。
+- npm 11 的 `npm publish` 在开启 2FA 的账号上会直接 `E403`（要求 `granular access token with bypass 2fa`），而带 bypass 2FA 的 token 只允许**暂存**发布。新包因此走 npm ≥ 12 的暂存发布：`npm login` → `npx npm@12 stage publish` → `npx npm@12 stage list` → `npx npm@12 stage approve <stage-id>`（需要时加 `--otp <6位动态码>`）。`prepublishOnly` 会先跑 26 项测试。npm 12 要求 node `^22.22.2 || ^24.15.0 || >=26`（本机 v24.14.0 只有 EBADENGINE 警告）。
+- 自动发布：[.github/workflows/release.yml](.github/workflows/release.yml) 在推送 `v*` 标签时用 npm 12 发布，认证走 npm 的 **Trusted Publishing（OIDC，无需 `NPM_TOKEN`）**：先在 npm 包设置页 → Publishing access → Trusted Publisher 登记 GitHub Actions（repo `wukiQAQ/dsh-enter-using`、workflow `release.yml`）。发版流程：改 `version` → 提交 → `git tag v0.1.1 && git push origin v0.1.1`；未登记时改用上面的本地暂存发布。
 
 ## 目录
 
@@ -82,5 +83,5 @@ index.js                      # Host 半边（无行为，UI 全在 Client）
 client.js                     # Client 半边：审批面板 + 键盘交互
 test/client.test.mjs          # 测试
 market/dshmarket-entry.yml    # 待提交到 awesome-dsh-plugin 的商店条目
-.github/workflows/release.yml # 打 v* 标签时自动 npm publish（需 NPM_TOKEN）
+.github/workflows/release.yml # 打 v* 标签时自动 npm publish（npm 12 + OIDC Trusted Publishing）
 ```
